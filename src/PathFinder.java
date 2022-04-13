@@ -51,6 +51,42 @@ public class PathFinder {
         return mapOfListFilesInEachFolder;
     }
 
+    public void checkSequence(File root){
+        if(!root.isFile() && root.getName().startsWith("S")){
+            File[] files = root.listFiles();
+            if(files != null){
+                List<String> images = new ArrayList<>();
+                for(File f : files){
+                    String fileType = f.getAbsolutePath().substring(f.getAbsolutePath().length()-4) ;
+                    if(fileType.equalsIgnoreCase(".jpg") ||
+                        fileType.equalsIgnoreCase(".tif") ||
+                        fileType.equalsIgnoreCase(".png") ||
+                        fileType.equalsIgnoreCase("jpeg")){
+                        images.add(f.getName());
+                    }
+                }
+                List<Integer> numbers = new ArrayList<>();
+                for(String s : images){
+                    int n = Integer.parseInt(s.split("_")[0]);
+                    numbers.add(n);
+                }
+                numbers.sort(Comparator.naturalOrder());
+                for(int i = 1; i < numbers.size(); i++){
+                    if(numbers.get(i-1) + 1 != numbers.get(i)){
+                        System.out.println(root.getAbsolutePath() + " " + images);
+                    }
+                }
+            }
+        }else {
+            File[] files = root.listFiles();
+            if(files != null){
+                for(File file : files) {
+                    checkSequence(file);
+                }
+            }
+        }
+    }
+
     public Map<String, List<String>> getMapOfPairsImages(Map<String, List<String>> mapOfListFilesInEachFolder) throws Exception{
         Map<String, List<String>> mapOfPairsImages = new TreeMap<>();
         for(Map.Entry<String, List<String>> entry : mapOfListFilesInEachFolder.entrySet()){
@@ -132,6 +168,10 @@ public class PathFinder {
         }catch (IOException e){
             e.printStackTrace();
         }
+    }
+
+    public List<String> allImages(File root){
+        return null;
     }
 
 
